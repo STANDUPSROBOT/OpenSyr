@@ -9,7 +9,7 @@ class Motor_control():
         self.step_pin = 23
         self.dir_pin = 24
         self.enable_pin = 22
-        self.freq_hz = 240
+        self.freq_hz = 60
         self.setup()
 
     def unlock(self):
@@ -39,7 +39,7 @@ class Motor_control():
 
 #=============TESTS================
 motor_control = Motor_control()
-motor_control.move(nbpas = 100)
+motor_control.move(nbpas = 1000)
 for i in range(100):
     motor_control.move(nbpas = -1)
     time.sleep(0.1)
