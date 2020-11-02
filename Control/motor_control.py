@@ -1,5 +1,6 @@
 import RPi.GPIO as GPIO
 import time
+import math as m
 
 
 
@@ -33,6 +34,15 @@ class Motor_control():
             GPIO.output(self.step_pin, True)
             time.sleep(1/self.freq_hz)
             GPIO.output(self.step_pin, False)
+
+    
+    def convertir(self,periode, ml_periode, temps_total, diametre_ser):
+        #calcul du volume expulsé par pas avec :
+        #1 pas = 1.8°
+        #pas_vis=2
+        Vol_pas = 2*(1.8/360)*m.pi*(pow(diametre_ser,2)/4)
+        #calcul du nombre de pas à faire lors d'une période si on donne les mL/periode 
+        return  ml_periode/Vol_pas
 
 
 
