@@ -11,10 +11,10 @@ class Motor_control():
         self.dir_pin = 24
         self.enable_pin = 22
         self.freq_hz = 100
-        
         self.thread = 0.8
         self.angle_per_step = 1.8
-
+        self.stopFlag = False
+        self.curent_step = 0
         self.setup()
 
     def unlock(self):
@@ -34,10 +34,12 @@ class Motor_control():
             GPIO.output(self.dir_pin, True)
         else:
             GPIO.output(self.dir_pin, False)
+
         for i in range(nb_step):
             GPIO.output(self.step_pin, True)
             time.sleep(1/self.freq_hz)
             GPIO.output(self.step_pin, False)
+            self.curent_step = i
 
 
     def move_dist(self,dist_cm,time_sec = 1):
@@ -45,6 +47,8 @@ class Motor_control():
         print(dist_cm)
         t = time_sec/steps
         for i in range(int(steps)):
+            if(self.stopFlag):
+                break
             self.move_step(1)
             time.sleep(t)
 
@@ -56,7 +60,7 @@ class Motor_control():
 
 
 
-    def move_time_freq(self,injection_par_periode_ml,periode_injections_sec,nb_injections_total):
+    def move_time_freq(self,injection_par_periode_ml,periode_injections_sec,nb_injections_total,diam_ser):
         self.freq_hz = 1/periode_injections_sec
         self.move_ml(injection_par_periode_ml*nb_injections_total,1.579)
 
@@ -76,7 +80,7 @@ class Motor_control():
 #=============TESTS================
 motor_control = Motor_control()
 #motor_control.move_ml(5,1.579)
-motor_control.move_time_freq(0.05,0.5,100)
+motor_control.move_time_freq(0.05,0.5,100,1.579)
 
 motor_control.unlock()
 GPIO.cleanup()
