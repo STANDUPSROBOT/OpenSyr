@@ -1,6 +1,11 @@
-import RPi.GPIO as GPIO
 import time
 import math as m
+
+DEBUG = True
+
+if(not DEBUG):
+    import RPi.GPIO as GPIO
+    GPIO.cleanup()
 
 
 
@@ -13,9 +18,14 @@ class Motor_control():
         self.freq_hz = 100
         self.thread = 0.8
         self.angle_per_step = 1.8
+        self.driver_sub_division = 16
+
         self.stopFlag = False
         self.curent_step = 0
-        self.setup()
+        if(not DEBUG):
+            self.setup()
+        
+
 
     def unlock(self):
         GPIO.output(self.enable_pin, True)
@@ -27,19 +37,25 @@ class Motor_control():
         GPIO.setup(self.dir_pin, GPIO.OUT, initial=GPIO.LOW)
 
     def move_step(self,nb_step):
-        GPIO.output(self.enable_pin, False)
-        direction = nb_step < 0
-        nb_step = abs(nb_step)
-        if(direction):
-            GPIO.output(self.dir_pin, True)
+        if(DEBUG):
+            print("Starting injection of "+ str(nb_step)+" steps with period  = ",1/self.freq_hz," please wait")
+            for i in range(nb_step):
+                time.sleep(1/self.freq_hz)
+                self.curent_step = i
         else:
-            GPIO.output(self.dir_pin, False)
+            GPIO.output(self.enable_pin, False)
+            direction = nb_step < 0
+            nb_step = abs(nb_step)
+            if(direction):
+                GPIO.output(self.dir_pin, True)
+            else:
+                GPIO.output(self.dir_pin, False)
 
-        for i in range(nb_step):
-            GPIO.output(self.step_pin, True)
-            time.sleep(1/self.freq_hz)
-            GPIO.output(self.step_pin, False)
-            self.curent_step = i
+            for i in range(nb_step):
+                GPIO.output(self.step_pin, True)
+                time.sleep(1/self.freq_hz)
+                GPIO.output(self.step_pin, False)
+                self.curent_step = i
 
 
     def move_dist(self,dist_cm,time_sec = 1):
@@ -60,9 +76,6 @@ class Motor_control():
 
 
 
-    def move_time_freq(self,injection_par_periode_ml,periode_injections_sec,nb_injections_total,diam_ser):
-        self.freq_hz = 1/periode_injections_sec
-        self.move_ml(injection_par_periode_ml*nb_injections_total,1.579)
 
 
 
@@ -75,12 +88,10 @@ class Motor_control():
 
 
 
+# #=============TESTS================
+# motor_control = Motor_control()
+# #motor_control.move_ml(5,1.579)
+# motor_control.move_time_freq(0.05,0.5,100,1.579)
 
-
-#=============TESTS================
-motor_control = Motor_control()
-#motor_control.move_ml(5,1.579)
-motor_control.move_time_freq(0.05,0.5,100,1.579)
-
-motor_control.unlock()
-GPIO.cleanup()
+# motor_control.unlock()
+# GPIO.cleanup()
