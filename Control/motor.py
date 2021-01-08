@@ -9,7 +9,7 @@ if(not DEBUG):
 
 
 
-class Motor_control():
+class Motor():
 
     def __init__(self):
         self.step_pin = 23
@@ -25,6 +25,10 @@ class Motor_control():
         if(not DEBUG):
             self.setup()
         
+
+    def reset(self):
+        self.stopFlag = False
+        self.curent_step = 0
 
 
     def unlock(self):
@@ -52,6 +56,8 @@ class Motor_control():
                 GPIO.output(self.dir_pin, False)
 
             for i in range(nb_step):
+                if(self.stopFlag):
+                    break
                 GPIO.output(self.step_pin, True)
                 time.sleep(1/self.freq_hz)
                 GPIO.output(self.step_pin, False)
