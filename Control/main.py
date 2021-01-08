@@ -11,6 +11,7 @@ class OpenSryMain():
 
 
         self.motor = Motor_control()
+        self.motor.unlock()
         #constants
         self.driver_subdivision_mode = self.motor.driver_sub_division
         self.screw_thread = self.motor.thread
@@ -55,9 +56,10 @@ class OpenSryMain():
             print("Normal start")
             nb_injections_total = int(self.length_of_exp / self.periode)
             self.motor.freq_hz = 1/self.periode
-            self.motor.move_step(nb_injections_total)
+            self.motor.move_step(-1*nb_injections_total)
 
         print("---Finished experiemnt in %s seconds ---" % (time.time() - start_time))
+        self.motor.unlock()
 
     def stop(self):
         self.motor.stopFlag = True

@@ -1,7 +1,7 @@
 import time
 import math as m
 
-DEBUG = True
+DEBUG = False
 
 if(not DEBUG):
     import RPi.GPIO as GPIO
@@ -18,7 +18,7 @@ class Motor_control():
         self.freq_hz = 100
         self.thread = 0.8
         self.angle_per_step = 1.8
-        self.driver_sub_division = 16
+        self.driver_sub_division = 1
 
         self.stopFlag = False
         self.curent_step = 0
@@ -73,14 +73,6 @@ class Motor_control():
         Vol_pas = self.thread*(self.angle_per_step/360.0)*m.pi*(diametre_ser/2)**2
         nb_pas = ml/Vol_pas
         self.move_step(int(nb_pas))
-
-
-
-
-
-
-
-
 
 
 

@@ -34,7 +34,6 @@ class Interface():
 			self.textbox_FLOW.grid(row=4,column=1)
 			
 
-
 			# Partie 2 : CONTROL PUMP #
 			self.l11=Label(self.frame1,text="PUMP CONTROL",fg="dark green",font=25,bg="light blue")
 			self.l11.grid(row=6,column=1,padx=20,pady=20)
