@@ -1,7 +1,7 @@
 import time
 import math as m
 
-DEBUG = False
+DEBUG = True
 
 if(not DEBUG):
     import RPi.GPIO as GPIO
@@ -28,18 +28,23 @@ class Motor_control():
 
 
     def unlock(self):
-        GPIO.output(self.enable_pin, True)
+        if(not DEBUG):
+            GPIO.output(self.enable_pin, True)
 
     def setup(self):
-        GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(self.enable_pin, GPIO.OUT, initial=GPIO.LOW)
-        GPIO.setup(self.step_pin, GPIO.OUT, initial=GPIO.LOW)
-        GPIO.setup(self.dir_pin, GPIO.OUT, initial=GPIO.LOW)
+        if(not DEBUG):
+
+            GPIO.setmode(GPIO.BOARD)
+            GPIO.setup(self.enable_pin, GPIO.OUT, initial=GPIO.LOW)
+            GPIO.setup(self.step_pin, GPIO.OUT, initial=GPIO.LOW)
+            GPIO.setup(self.dir_pin, GPIO.OUT, initial=GPIO.LOW)
 
     def move_step(self,nb_step):
         if(DEBUG):
             print("Starting injection of "+ str(nb_step)+" steps with period  = ",1/self.freq_hz," please wait")
+            nb_step = abs(nb_step)
             for i in range(nb_step):
+                print("step")
                 time.sleep(1/self.freq_hz)
                 self.curent_step = i
         else:

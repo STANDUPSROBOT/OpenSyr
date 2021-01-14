@@ -46,9 +46,9 @@ class Interface():
 			self.button3=Button(self.frame1,text="RESET",font=12)
 			self.button3['command']=lambda : self.rechange_bg_RESET()
 			self.button3.grid(row=9,column=2,padx=10,pady=10)
-			self.label22=Label(self.frame1,text="TIME ELAPSING",font=12,bg="light blue")
+			self.label22=Label(self.frame1,text="TIME ELAPSED",font=12,bg="light blue")
 			self.label22.grid(row=7,column=0,padx=10,pady=10,sticky=E)
-			self.label2=Label(self.frame1,text="TIME ELAPSING",font=12,bg="light blue")
+			self.label2=Label(self.frame1,text="TIME ELAPSED",font=12,bg="light blue")
 			self.label2.grid(row=7,column=1,padx=10,pady=10)
 			self.label11=Label(self.frame1,text="INJECTED VOLUME",font=12,bg="light blue")
 			self.label11.grid(row=8,column=0,padx=10,pady=10,sticky=E)
@@ -76,6 +76,7 @@ class Interface():
 			self.update_parameters()
 			self.x.run()
 			self.clock()
+			self.volume()
 
 		def rechange_bg_RESET(self):
 			self.frame1['bg']="light blue"
@@ -87,8 +88,9 @@ class Interface():
 			self.label2.config(text="{:d}:{:02d}:{:02d}".format(h, m, s))
 			self.label2.after(1000,self.clock)
 
+
 		def volume(self):
-			self.label1.config(text=str(self.x.get_injected_volume))
+			self.label1.config(text=str(self.x.get_injected_volume()))
 			self.label1.after(1000,self.volume)
 
 											# fonction interface #

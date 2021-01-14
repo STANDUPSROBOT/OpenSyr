@@ -75,9 +75,11 @@ class OpenSryMain():
 
 
     def get_injected_volume(self):
-        self.update_elapsed_steps()
-        flow = self.total_ml/self.length_of_exp
-        return flow*self.elapsed_steps
+        r = 0
+        if(self.length_of_exp):
+            r = self.total_ml
+
+        return r
 
 
     def update_elapsed_steps(self):
