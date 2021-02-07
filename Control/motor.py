@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Jan 30 00:45:02 2021
+
+@author: jerem
+"""
+
 import time
 import math as m
 
@@ -40,12 +47,12 @@ class Motor():
         GPIO.setup(self.step_pin, GPIO.OUT, initial=GPIO.LOW)
         GPIO.setup(self.dir_pin, GPIO.OUT, initial=GPIO.LOW)
 
-    def move_step(self,nb_step):
+    def move_step(self,nb_step,mode):
         if(DEBUG):
             print("Starting injection of "+ str(nb_step)+" steps with period  = ",1/self.freq_hz," please wait")
             for i in range(nb_step):
                 time.sleep(1/self.freq_hz)
-                self.curent_step = i
+                self.curent_step += i
         else:
             GPIO.output(self.enable_pin, False)
             direction = nb_step < 0
@@ -59,9 +66,16 @@ class Motor():
                 if(self.stopFlag):
                     break
                 GPIO.output(self.step_pin, True)
-                time.sleep(1/self.freq_hz)
-                GPIO.output(self.step_pin, False)
-                self.curent_step = i
+                if mode == 1:
+                    time.sleep(1/self.freq_hz)
+                    GPIO.output(self.step_pin, False)
+                elif mode== 2:
+                    time.sleep(1/1000)
+                    GPIO.output(self.step_pin, False)
+                if direction: 
+                    self.curent_step -= i
+                if else: 
+                    self.curent_step += i
 
 
     def move_dist(self,dist_cm,time_sec = 1):

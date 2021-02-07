@@ -17,6 +17,7 @@ class experiemnt():
         #
 
         #===
+        #ellapsed step pas trop chiant à coder pour pas grand chose ?
         self.elapsed_steps = None
         self.nb_step_max = None
         self.state_flag = 0 # 1 if experiment stoped 2 if changing seringe 
@@ -68,17 +69,49 @@ class experiemnt():
     def step(self):
         #TODO call motor step
         # and set self.flag_is_init_position to false 
+        """Questions sur comment on va utiliser les steps dans cette classe"""
         pass
 
 
     def init_position(self):
         #TODO Drive the motor to the init position (nb_step_max/2 i guess)
-        pass
+        init_step = self.nb_step_max/2
+        if self.sensor.get_state() == 1:
+            self.motor.move_step(init_step,2)
+            self.flag_is_init_position = True
+        elif  self.sensor.get_state() == 2:
+            self.motor.move_step(-init_step,2)
+            self.flag_is_init_position = True
+        elif self.sensor.get_state == 0:
+            while self.sensor.get_state()==0:
+                self.motor.move_step(10,2)
+            self.motor.move_step(init_step,2)
+            self.flag_is_init_position = True    
+        
 
 
     def find_nb_step_max(self):
         #TODO Use the sensor and the motor to determine the minimum
-        pass
+        if self.motor.unlock()==True:
+            #On envoi le chariot contre un capteur si il n'y est pas déjà
+            while self.sensor.get_state()==0:
+                self.motor.move_step(-10,2)
+            #Si il est sur le capteur 1, on fais tourner le moteur dans le sens classique 
+            if self.sensor.get_state() == 1:
+                while self.sensor.get_state()!=2:
+                    self.motor.move_step(1,2)
+                    #et on incremente le nb de pas max 
+                    self.nb_step_max = self.nb_step_max + 1
+                    
+            #pareil pour le cas où le chariot est sur le capteur 2         
+            elif self.sensor.get_state() == 2:
+                while self.sensor.get_state()!=1:
+                    self.motor.move_step(-1,2)
+                    self.nb_step_max = self.nb_step_max + 1
+            
+    def reset_nb_step_max(self):
+          self.nb_step_max = None
+
 
     def replace_seringe(self):
         #TODO freeze the experiment to let the user change the seringe
@@ -105,7 +138,7 @@ class experiemnt():
 
     def get_seringe_percent(self):
         #TODO return 0 if the seringe is full 0.5 if half full ect ect  
-        return 1.0
+        return (self.motor.curent_step/(self.nb_step_max))
 
 
     def get_elapsed_time(self):
@@ -130,6 +163,7 @@ class experiemnt():
         """
         the name is explicit ....
         """
+        #TO-DO faire un get elapsed step plutôt
         self.elapsed_steps = self.motor.curent_step
 
 
