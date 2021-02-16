@@ -1,9 +1,9 @@
-Dans un terminal :
+Ouvrir un terminal dans le dossier api :
 source venv/bin/activate
 flask run
 
-Dans un autre :
+Dans un autre terminal :
 yarn start-api
 (Ouvre le navigateur à l'adresse indiquée)
-Aller à cette adresse : localhost:3000/OpenSYR
+
 
