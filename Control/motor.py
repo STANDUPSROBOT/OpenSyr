@@ -8,7 +8,7 @@ Created on Sat Jan 30 00:45:02 2021
 import time
 import math as m
 
-DEBUG = False
+DEBUG = True
 
 if(not DEBUG):
     import RPi.GPIO as GPIO
@@ -28,18 +28,23 @@ class Motor():
         self.driver_sub_division = 1
 
         self.stopFlag = False
-        self.curent_step = 0
+        self.nb_step_exp = 0  # nombre total de steps (+ only)
+        self.current_step = 0 # Position actuelle (+ ou -) 
         if(not DEBUG):
             self.setup()
         
 
     def reset(self):
-        self.stopFlag = False
-        self.curent_step = 0
 
+        self.stopFlag = False
+        self.nb_step_exp = 0
+    
+    def reset_step_exp(self):
+        self.nb_step_exp = 0
 
     def unlock(self):
-        GPIO.output(self.enable_pin, True)
+        if(not DEBUG):
+            GPIO.output(self.enable_pin, True)
 
     def setup(self):
         GPIO.setmode(GPIO.BOARD)
@@ -49,10 +54,23 @@ class Motor():
 
     def move_step(self,nb_step,mode):
         if(DEBUG):
-            print("Starting injection of "+ str(nb_step)+" steps with period  = ",1/self.freq_hz," please wait")
+            direction = nb_step < 0
+            nb_step = abs(nb_step)
             for i in range(nb_step):
-                time.sleep(1/self.freq_hz)
-                self.curent_step += i
+                if(self.stopFlag):
+                    break
+                if mode == 1:
+                    time.sleep(1/self.freq_hz)
+                elif mode== 2:
+                    time.sleep(1/1000)
+                if direction: 
+                    self.current_step -=1
+                else:
+                    self.current_step +=1
+                    self.nb_step_exp +=1
+                #print("Curent motor step = ",self.current_step)
+
+
         else:
             GPIO.output(self.enable_pin, False)
             direction = nb_step < 0
@@ -73,10 +91,10 @@ class Motor():
                     time.sleep(1/1000)
                     GPIO.output(self.step_pin, False)
                 if direction: 
-                    self.curent_step -= i
-                if else: 
-                    self.curent_step += i
-
+                    self.current_step -=1
+                else:
+                    self.current_step +=1
+                    self.nb_step_exp +=1
 
     def move_dist(self,dist_cm,time_sec = 1):
         steps = dist_cm / ((self.angle_per_step/360.0)*self.thread) 
@@ -87,13 +105,6 @@ class Motor():
                 break
             self.move_step(1)
             time.sleep(t)
-
-
-    def move_ml(self,ml,diametre_ser):
-        Vol_pas = self.thread*(self.angle_per_step/360.0)*m.pi*(diametre_ser/2)**2
-        nb_pas = ml/Vol_pas
-        self.move_step(int(nb_pas))
-
 
 
 

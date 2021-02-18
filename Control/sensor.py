@@ -6,7 +6,7 @@ Created on Sun Jan 24 22:34:47 2021
 """
 
 
-DEBUG = False
+DEBUG = True
 
 if(not DEBUG):
     import RPi.GPIO as GPIO
@@ -32,6 +32,9 @@ class Sensor:
 
     #TODO Return 1 if the sensor limit switch detect a rigth colision, 2 if a left, None if None
     def get_state(self):
+        if(DEBUG):
+            return 0
+            
         if self.NO1>2:
             return 1
         elif self.NO2>2:
