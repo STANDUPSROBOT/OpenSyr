@@ -5,8 +5,8 @@ Open Source Automatic Syringe pump project
 - [X] Design the backend (python process) as an API (REST controller + model)
 - [X] React Js GUI, REST com (if motivated)
 - [X] Get a name for each module (cf Falcon 9 -> Falcon Heavy from SpaceX)
-- [ ] Think about continuous motor (advice from M. Taix)
-- [X] Think about vertical extensions (syringe pair over the previous one)
+- [X] Think about continuous motor (advice from M. Taix)
+- [ ] Think about vertical extensions (syringe pair over the previous one)
 
 #### Code list
 - [X] create the calibration phase
