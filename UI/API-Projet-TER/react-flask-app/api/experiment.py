@@ -34,6 +34,10 @@ class Experiment():
         
         self.sensor = Sensor()
 
+        self.thread = None
+        self.stop_thread = False
+
+
         self.flag_is_init_position = False # flag to check if we are on the init position
         self.is_initialised = False
         #flags pour l'interface
@@ -74,6 +78,7 @@ class Experiment():
 
         self.elapsed_steps = 0
         self.state_flag = 0
+        self.stop_thread = False
         self.motor.reset()
         self.flag_is_init_position = False
 
@@ -149,12 +154,21 @@ class Experiment():
         #TODO start un thread qui appelle le bon nombre de fois step
         # if the experiment  has not been initialised (nb_step_max is None) we cant run it
         # the experiment should stop if the state flag is 1 or 2
+        
         if self.flag_is_init_position == True:
             self.motor.reset_step_exp()
-            
-        thread = Thread(target = self.run_thread)
-        thread.start()
-        thread.join()
+        else:
+            if(DEBUG):
+                self.motor.current_step = int(self.nb_step_max/2)
+            else:
+                self.init_position()
+
+
+        
+        
+        self.thread = Thread(target = self.run_thread)
+        self.thread.start()
+        self.thread.join()
 
         ## J'avais pour idee de pas faire de continue_experiment, tu fais un thread qui fait avancer de ##
         ## tant de ml (calcules grace a total_step_syringe*ml_per_step) et qui s'arrete si le flag est a 2 ##
@@ -173,11 +187,10 @@ class Experiment():
     def run_thread(self):
 
         while(True):
+                
 
             ml = self.total_ml - self.get_injected_volume()
             
-
-
             if(ml>self.syringe.total_step_syringe*self.min_ml_precision):
                 ml = self.syringe.total_step_syringe*self.min_ml_precision
 
@@ -185,9 +198,12 @@ class Experiment():
             print("ml =",ml)
 
             return_ =  self.move_ml(ml,self.serynge_diam)
+            if(self.stop_thread):
+                print("THREAD KILLED")
+                break 
             if(return_ == 0):
-
                 print(self.get_injected_volume())
+                print('EXIT')
                 exit(0)
 
             #interface trucs 
@@ -240,9 +256,10 @@ class Experiment():
             #print(self.sensor.get_state() !=0)
             #print(self.get_syringe_percent() > 1)
             done = self.state_flag != 0 or self.sensor.get_state() !=0 or self.get_syringe_percent() > 0.98
-            if(done):
+            if(done or self.stop_thread):
                 print("done")
                 return pas
+
         return pas
 
     def continue_experiment(self):
@@ -263,7 +280,8 @@ class Experiment():
         """
         self.motor.stopFlag = True
         self.state_flag = 1
-        self.update_elapsed_steps()
+        self.stop_thread = True
+        self.nb_step_max = None
         self.motor.unlock
 
 
@@ -307,7 +325,9 @@ class Experiment():
 
     def set_serynge_in_place(self):
         self.new_serynge_in = True
-
+    
+    def is_ready(self):
+        return not(self.nb_step_max == None)
 
 # exp = Experiment()
 # exp.find_nb_step_max()

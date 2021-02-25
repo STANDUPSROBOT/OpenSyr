@@ -21,9 +21,14 @@ def launch_experience():
     print("======================Set experience=====================")
     exp.set_parameters(serynge_diam=diameter,total_ml=volume,length_of_exp=length)
     print("======================Launch experience=====================")
-    exp.run()
+    if(exp.is_ready()):
+        exp.run()
+        return make_response(jsonify({'is_ok': True}),1)
+
+    else:
+        print('PLEASE MAKE A EXPERIMENT INIT')
+        return make_response(jsonify({'is_ok': False}),0)
     #LAUNCH CODE FOR EXPERIENCE
-    return make_response(jsonify({'is_ok': True}),1234)
 
 @app.route('/api/initialisation',methods = ['GET','POST'])
 def initialisation():
@@ -43,6 +48,7 @@ def stop_experience():
 @app.route('/api/end_experience',methods = ['GET','POST'])
 def end_experience():
     print("The experience has finished")
+    exp.reset()
     #LAUNCH CODE if there is a code when the experience end
     #pour le moment j'ai pas de code a la fin
     return make_response(jsonify({'is_ok': True}), 990)
@@ -50,6 +56,7 @@ def end_experience():
 
 @app.route('/api/change_syringe',methods = ['GET','POST'])
 def change_syringe():
+    print("=======================================================================1")
     print("Change the syringe")
     #LAUNCH CODE WHEN SYRINGE ARE CHANGED
     exp.set_serynge_in_place()
@@ -81,6 +88,8 @@ def end_of_course():
 
 @app.route('/api/syringe_empty_code',methods = ['GET','POST'])
 def syringe_empty():
+    print("=======================================================================2")
+
     print("Syringe empty")
     #LAUNCH CODE WHEN SYRINGE ARE EMPTY
     return make_response(jsonify({'is_ok': True}), 9091)  
@@ -88,6 +97,8 @@ def syringe_empty():
 
 @app.route('/api/syringe_remove',methods = ['GET','POST'])
 def syringe_remove():
+    print("=======================================================================3")
+
     exp.set_serynge_removed()
     return make_response(jsonify({'is_ok': True}), 9091)  
 
