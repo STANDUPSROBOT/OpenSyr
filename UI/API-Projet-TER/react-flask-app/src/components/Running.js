@@ -111,10 +111,24 @@ class Running extends React.Component{
   //CHANGE SYRINGE (stage 1)
   HandleSubmit3(e){
     e.preventDefault();
+    //Launch code before removing syringe
+    this.Stop_for_remove();
     this.setState({syringe_empty : false});     
     this.setState({show : true});           
   }
   
+  Stop_for_remove(){
+    const config = {
+      headers:{
+          'Content-Type' : 'application/json',
+      }
+    }; 
+    axios.post("/api/stop_for_remove", 0,config)
+    .then(response => {
+        console.log(response)
+    })
+  }
+
   //CHANGE SYRINGE (stage 2)
   HandleClose(e){
     e.preventDefault();
@@ -180,30 +194,30 @@ class Running extends React.Component{
     render(){
       return <div className="App-main" >        
                 <br></br>                 
-                <h1>The experience is running</h1><br></br><br></br><br></br>
-                <h2>Experience progress</h2>
-                <ProgressBar variant="warning" now={this.state.expProgress} label={`${this.state.expProgress}% experience progress`} />
+                <h1>The experiment is running</h1><br></br><br></br><br></br>
+                <h2>Experiment progress</h2>
+                <ProgressBar variant="warning" now={this.state.expProgress} label={`${this.state.expProgress}% experiment progress`} />
                 <br></br><h2>Syringe progress</h2>
-                <ProgressBar variant="warning" now={this.state.syrProgress} label={`${this.state.syrProgress}% syringe progress`} />
+                <ProgressBar variant="warning" now={this.state.syrProgress} label={`${this.state.syrProgress}% syringes progress`} />
                 
                 <Form action="./api/stop_experience" method="post" onSubmit={this.HandleSubmit} >
-                  <Button variant="danger" type="submit" disabled={this.state.expProgress >= 100}>STOP EXPERIENCE</Button><br></br> 
+                  <Button variant="danger" type="submit" disabled={this.state.expProgress >= 100}>STOP EXPERIMENT</Button><br></br> 
                 </Form>
 
                 <Form action="./api/change_syringe" method="post" onSubmit={this.HandleSubmit3} >
-                  <Button variant="primary" type="submit" disabled={this.state.expProgress >= 100}>Change syringe</Button>
+                  <Button variant="primary" type="submit" disabled={this.state.expProgress >= 100}>Change syringes</Button>
                 </Form> 
                 
                 <Form action="./api/end_experience" method="post" onSubmit={this.HandleSubmit2} >
-                  <Button variant="primary" type="submit" disabled={this.state.expProgress < 100}>End experience</Button>
+                  <Button variant="primary" type="submit" disabled={this.state.expProgress < 100}>End experiment</Button>
                 </Form>
 
                 
                 <Modal show={this.state.show} >
                   <Modal.Header >
-                    <Modal.Title>Syringe removing</Modal.Title>
+                    <Modal.Title>Syringes removing</Modal.Title>
                   </Modal.Header>
-                  <Modal.Body>Done removing the syringe ?</Modal.Body>
+                  <Modal.Body>Done removing the syringes ?</Modal.Body>
                   <Modal.Footer>
                     <Button id="1" variant="secondary" onClick={this.HandleClose}>
                       YES
@@ -213,9 +227,9 @@ class Running extends React.Component{
 
                  <Modal show={this.state.show2}>
                   <Modal.Header >
-                    <Modal.Title>Place new syringe</Modal.Title>
+                    <Modal.Title>Place new syringes</Modal.Title>
                   </Modal.Header>
-                  <Modal.Body>Done placing the syringe ?</Modal.Body>
+                  <Modal.Body>Done placing the syringes ?</Modal.Body>
                   <Modal.Footer>
                     <Button id="2" variant="secondary" onClick={this.HandleClose2}>
                       YES
@@ -225,9 +239,9 @@ class Running extends React.Component{
 
                 <Modal show={this.state.show3}>
                   <Modal.Header>
-                    <Modal.Title>Stop experience</Modal.Title>
+                    <Modal.Title>Stop experiment</Modal.Title>
                   </Modal.Header>
-                  <Modal.Body>Are you sure you want to stop the experience ?</Modal.Body>
+                  <Modal.Body>Are you sure you want to stop the experiment ?</Modal.Body>
                   <Modal.Footer>
                     <Button id="3" variant="secondary" onClick={this.HandleClose3}>
                       YES
@@ -239,9 +253,9 @@ class Running extends React.Component{
                 </Modal> 
                 <Modal show={this.state.syringe_soon_empty}>
                   <Modal.Header>
-                    <Modal.Title>Syringe empty soon</Modal.Title>
+                    <Modal.Title>Syringes empty soon</Modal.Title>
                   </Modal.Header>
-                  <Modal.Body>Warning : the syringe is soon empty !!!</Modal.Body>
+                  <Modal.Body>Warning : the syringes are soon empty !!!</Modal.Body>
                   <Modal.Footer>
                     <Button id="5" variant="secondary" onClick={this.HandleClose5}>
                       OK
@@ -250,9 +264,9 @@ class Running extends React.Component{
                 </Modal>
                 <Modal show={this.state.syringe_empty}>
                   <Modal.Header>
-                    <Modal.Title>Syringe empty</Modal.Title>
+                    <Modal.Title>Syringes empty</Modal.Title>
                   </Modal.Header>
-                  <Modal.Body>Syringe are empty, press ok to continue</Modal.Body>
+                  <Modal.Body>Syringes are empty, press ok to continue</Modal.Body>
                   <Modal.Footer>
                     <Button id="6" variant="secondary" onClick={this.HandleClose6}>
                       OK

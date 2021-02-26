@@ -8,6 +8,14 @@ app = Flask(__name__)
 exp = Experiment()
 
 
+@app.route('/api/is_rdy_experience',methods = ['GET','POST'])
+def is_rdy_experience():
+    if(exp.is_ready()):
+        return jsonify(rdy = True)
+    else:
+        print('PLEASE MAKE A EXPERIMENT INIT')
+        return jsonify(rdy = False)
+
 
 @app.route('/api/launch_experience',methods = ['GET','POST'])
 def launch_experience():
@@ -100,6 +108,12 @@ def syringe_remove():
     print("=======================================================================3")
 
     exp.set_serynge_removed()
+    return make_response(jsonify({'is_ok': True}), 9091)  
+
+# CODE POUR UGO 
+@app.route('/api/stop_for_remove',methods = ['GET','POST'])
+def stop_for_remove():
+    print("=======================================================================")    
     return make_response(jsonify({'is_ok': True}), 9091)  
 
  

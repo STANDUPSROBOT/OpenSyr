@@ -18,7 +18,7 @@ class App extends React.Component{
                       <Navbar.Brand href="home">Home</Navbar.Brand>
                         <Nav className="mr-auto">
                           <Nav.Link href="Initialisation">Initialisation</Nav.Link>  
-                          <Nav.Link href="OpenSYR">OpenSYR</Nav.Link> 
+                          <Nav.Link href="OpenSYR">Launching</Nav.Link> 
                           <Nav.Link href="Running" disabled>Running</Nav.Link>                                                  
                         </Nav>
                       </Navbar>
