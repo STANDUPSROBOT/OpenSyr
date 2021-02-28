@@ -10,8 +10,7 @@ class Syringe():
     def __init__(self):
         
         self.total_step_syringe = 0
-        self.syringe_length = None
-        self.serynge_diam = None
+        self.serynge_diam = 2
         
     def set_total_step_syringe(self,x):
         self.total_step_syringe = x

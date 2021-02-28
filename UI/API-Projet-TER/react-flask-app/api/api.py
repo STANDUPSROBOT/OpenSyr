@@ -113,7 +113,9 @@ def syringe_remove():
 # CODE POUR UGO 
 @app.route('/api/stop_for_remove',methods = ['GET','POST'])
 def stop_for_remove():
-    print("=======================================================================")    
+    print("=======================================================================")
+    exp.replace_seringe()
+
     return make_response(jsonify({'is_ok': True}), 9091)  
 
  
