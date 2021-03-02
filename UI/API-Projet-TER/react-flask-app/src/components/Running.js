@@ -18,7 +18,8 @@ class Running extends React.Component{
     // syringe empty = boolean to know if we are at the end of the syringe (sent by the model)
     // block_pop_up = boolean to stop the soon empty pop up
     // block_pop_up2 = boolean to stop the empty pop up
-    this.state={expProgress : 0,syrProgress : 0, show : false, show2 : false,show3 : false,syringe_soon_empty : false,syringe_empty : false, block_pop_up : false, block_pop_up2 : false};
+    // name,temp and actual_name are for the pause/unpause button
+    this.state={expProgress : 0,syrProgress : 0, show : false, show2 : false,show3 : false,syringe_soon_empty : false,syringe_empty : false, block_pop_up : false, block_pop_up2 : false, name : "Pause", temp : "Unpause",actual_name : 1};
     //ALLOW TO US KEY WORD "THIS" IN THOSE FUNCTIONS
     this.HandleSubmit = this.HandleSubmit.bind(this);  
     this.HandleSubmit2 = this.HandleSubmit2.bind(this); 
@@ -191,6 +192,46 @@ class Running extends React.Component{
     };
     axios.post("/api/syringe_empty_code", 0,config);    
   }
+
+
+  //Gestion du pause/unpause
+  changeValue(e){
+    e.preventDefault();
+    //pause
+    if(this.state.actual_name===1){
+        var tempo = this.state.name;
+        this.setState({name : this.state.temp});
+        this.setState({temp : tempo});
+        this.setState({actual_name : 2});
+        this.pause_request();
+    //unpause
+    }else if(this.state.actual_name===2){
+        tempo = this.state.temp;
+        this.setState({temp :this.state.name});;
+        this.setState({name : tempo});
+        this.setState({actual_name : 1});
+        this.unpause_request();
+    }
+  }
+
+  pause_request(){
+    const config = {
+      headers:{
+          'Content-Type' : 'application/json',
+      }
+    };
+    axios.post("/api/pause_request", 0,config); 
+  }
+
+  unpause_request(){
+    const config = {
+      headers:{
+          'Content-Type' : 'application/json',
+      }
+    };
+    axios.post("/api/unpause_request", 0,config); 
+  }
+
     render(){
       return <div className="App-main" >        
                 <br></br>                 
@@ -203,6 +244,8 @@ class Running extends React.Component{
                 <Form action="./api/stop_experience" method="post" onSubmit={this.HandleSubmit} >
                   <Button variant="danger" type="submit" disabled={this.state.expProgress >= 100}>STOP EXPERIMENT</Button><br></br> 
                 </Form>
+                
+                <Button  variant="primary" type="submit" onClick={this.changeValue.bind(this)} >{this.state.name}</Button>
 
                 <Form action="./api/change_syringe" method="post" onSubmit={this.HandleSubmit3} >
                   <Button variant="primary" type="submit" disabled={this.state.expProgress >= 100}>Change syringes</Button>

@@ -55,7 +55,7 @@ class Experiment():
         lin_precision = (self.motor.angle_per_step/360)*(self.motor.thread/self.motor.driver_sub_division)
         #One motor step precision in ml
         self.min_ml_precision = (math.pi*(self.serynge_diam/2)**2) * lin_precision
-        #nombre de step à faire pour tant de ml
+        #nombre de step a faire pour tant de ml
         self.total_step_experiment = int(self.total_ml/self.min_ml_precision)
         #Using the minimal ml to compute the mminimal period of injections
         #ml per secondes that we have to inject to meet injection of "total_ml" during "length_of_exp"

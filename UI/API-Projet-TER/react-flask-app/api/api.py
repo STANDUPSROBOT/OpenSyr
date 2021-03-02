@@ -110,7 +110,6 @@ def syringe_remove():
     exp.set_serynge_removed()
     return make_response(jsonify({'is_ok': True}), 9091)  
 
-# CODE POUR UGO 
 @app.route('/api/stop_for_remove',methods = ['GET','POST'])
 def stop_for_remove():
     print("=======================================================================")
@@ -118,4 +117,16 @@ def stop_for_remove():
 
     return make_response(jsonify({'is_ok': True}), 9091)  
 
+@app.route('/api/pause_request',methods = ['GET','POST'])
+def pause_request():
+    print("=======================================================================")
+    #code to pause the experiment
+
+    return make_response(jsonify({'is_ok': True}), 9091)  
  
+@app.route('/api/unpause_request',methods = ['GET','POST'])
+def unpause_request():
+    print("=======================================================================")
+    #code to unpause the experiment
+
+    return make_response(jsonify({'is_ok': True}), 9091)  

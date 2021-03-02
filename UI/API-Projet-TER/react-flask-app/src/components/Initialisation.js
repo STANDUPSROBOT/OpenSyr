@@ -20,9 +20,9 @@ class Initialisation extends React.Component{
       }
   };
     axios.post("/api/initialisation",0,config)
-    window.location.href="/Home"   
+    window.location.href="/OpenSYR"   
   }
-  
+   
 
      render(){
       return  <div className="App-main" >
@@ -30,8 +30,9 @@ class Initialisation extends React.Component{
                 <h1>Remove the syringes to start the initalisation</h1><br></br>
                 <Form action="/api/initialisation" method="post" onSubmit={this.HandleSubmit}>
                 <Button  variant="primary" onClick={e => this.setState({ value: true })} value={this.state.value}>Done</Button><br></br>  
-                <Button  variant="primary" type="submit" disabled={!this.state.value}>Start initialisation</Button>  
+                <Button  variant="primary" type="submit" disabled={!this.state.value}>Start initialisation</Button>
                 </Form>
+                
               </div>
     }
 
